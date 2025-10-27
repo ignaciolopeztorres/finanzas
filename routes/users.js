@@ -1,13 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const pool = require('../core/database/mysql');
-
-//CONFIGURACION
-const {
-  APP_NAME,
-  APP_IMG_URL,
-  APP_CSS_URL
-} = require('../core/settings/config');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -74,4 +66,21 @@ router.post('/login', function (req, res, next) {
   res.status(200).send('succesfull');
 });
 
+router.post('/signup', (req, res, next)=>{
+  const object = { name : req.body.name,
+    lastname : req.body.lastname, 
+    username : req.body.username, 
+    email : req.body.email, 
+    password : req.body.password
+  }
+  console.log(object);
+  res.send('hello!!');
+});
+
+conexion.query('SELECT 1 + 1 AS solution', (error, results, fields)=>{
+  if (error) {
+    throw error;
+  }
+  console.log('the solution is: ', results[0].solution);
+});
 module.exports = router;
