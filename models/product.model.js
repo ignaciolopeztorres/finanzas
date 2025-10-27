@@ -7,6 +7,7 @@
  */
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../core/config/sequelize.config.js";
+import Payment from "../models/payments.model.js";
 
 class Product extends Model{}
 
@@ -36,5 +37,15 @@ Product.init({
     sequelize,
     modelName: "Product"
 });
+
+Payment.hasOne(Product, {
+    sourceKey: "idProduct",
+    foreignKey: "productId"
+})
+
+Product.hasOne(Payment,{
+    sourceKey:"IdProducto",
+    foreignKey: "productId"
+})
 
 export default Product;
