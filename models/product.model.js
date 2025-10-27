@@ -43,7 +43,7 @@ Payment.hasOne(Product, {
     foreignKey: "productId"
 })
 
-Product.hasOne(Payment,{
+Product.belongsTo(Payment,{
     sourceKey:"IdProducto",
     foreignKey: "productId"
 })
