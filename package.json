@@ -1,33 +1,48 @@
 {
-  "name": "api-expressjs",
-  "version": "1.0.0",
+  "name": "finanzas",
+  "version": "0.0.0",
   "private": true,
+  "description": "Finanzas",
+  "keywords": [
+    "finanzas",
+    "presupuestos"
+  ],
+  "homepage": "https://github.com/ignaciolopeztorres/finanzas#readme",
+  "bugs": {
+    "url": "https://github.com/ignaciolopeztorres/finanzas/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ignaciolopeztorres/finanzas.git"
+  },
+  "license": "ISC",
+  "author": "Ignacio Lopez",
+  "type": "module",
+  "main": "bin/www",
+  "directories": {
+    "test": "tests"
+  },
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "jade": "~1.11.0",
-    "morgan": "~1.9.1",
-    "mysql": "^2.18.1"
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "debug": "^4.4.1",
+    "dotenv": "^17.2.0",
+    "ejs": "^3.1.6",
+    "express": "^4.21.2",
+    "express-session": "^1.18.2",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.15.3",
+    "sequelize": "^6.37.7"
   },
-  "description": "apirest",
-  "main": "app.js",
   "devDependencies": {
-    "nodemon": "^2.0.7"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://gitlab.com/ignacio.ujat/rest-api-express.git"
-  },
-  "author": "Ignacio Lopez Torres <ignacio.lopeztorres@hotmail.com> (http://ignaciolopeztorres.blogpot.com/)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://gitlab.com/ignacio.ujat/rest-api-express/issues"
-  },
-  "homepage": "https://gitlab.com/ignacio.ujat/rest-api-express#readme"
+    "less-middleware": "^2.2.1",
+    "nodemon": "^2.0.13"
+  }
 }

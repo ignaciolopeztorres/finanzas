@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="logo mx-auto">
+                <img src="{{ logo_img }}" class="img-thumbnail mx-auto d-block mt-5 logo_avatar" alt="">
+            </div>
+            <form action="/users/register" method="post">
+                <div class="form-group mt-4 login-form">
+                    <input type="text" class="form-control" name="fullname" id="fullname" placeholder="fullname">
+                </div>
+                <div class="form-group mt-4 login-form">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="username">
+                </div>
+                <div class="form-group mt-4 login-form">
+                  <input type="password" class="form-control" name="password" id="password" placeholder="password">
+                </div>
+                <div class="form-group mt-4 login-form">
+                    <input type="text" class="form-control" name="email" id="email" placeholder="email">
+                </div>
+                <div class="d-grid gap-2 mt-4">
+                    <button class="btn btn-primary">
+                        Create New Users
+                    </button>
+                </div>
+                <div class="d-grid mt-5">
+                    <a href="/users/login/" class="btn btn-outline-primary">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
