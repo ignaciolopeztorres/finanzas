@@ -6,7 +6,7 @@ import lessMiddleware  from 'less-middleware';
 import logger from 'morgan';
 
 import indexRouter from'./routes/index.routes.js';
-//var usersRouter = require('./routes/users');
+import usersRouter from './routes/users.routes.js';
 
 var app = express();
 
@@ -34,8 +34,9 @@ app.use(lessMiddleware(path.join(__dirname, 'public'),
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+//rutas
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
