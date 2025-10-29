@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import AccountService, { TokenService } from "../services/account.service.js";
+import accountService, { TokenService } from "../services/account.service.js";
 
 class UserController {
     constructor() { }
@@ -7,8 +7,6 @@ class UserController {
     // Obtener todos los usuarios
     async getAllUsers(req, res) {
         try {
-            TokenService.generateRefreshToken()
-            ts.deleteUser
             const users = await User.findAll();
             if (!users || users.length === 0) {
                 return res.status(404).json({ message: 'No users found' });
@@ -36,14 +34,14 @@ class UserController {
     // Crear un nuevo usuario
     async createUser(req, res) {
         try { 
-            const { username, name, email, password, role } = req.body;
-            const passwordHash = password;
 
-            const newUser = await User.create({ username, name, email, passwordHash, role });
+            const newUser = await accountService.register(req);
+            console.log(newUser);
+
             if (!newUser) {
                 return res.status(404).json({ error: "Usert Not create"})
             }
-            res.status(201).json(newRegisterUser);
+            res.status(newUser.status).json(newUser);
         } catch (error) {
             console.error('Error creating user: ', error);
             res.status(500).json({ message: 'Internal server error', error });

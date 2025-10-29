@@ -15,14 +15,16 @@ class TokenService {
     constructor() { }
     // Genera tokens
     static generateAccessToken(user) {
-        return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+        return jwt.sign({ id: user.idUser, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
     }
 
     static generateRefreshToken(user) {
-        return jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: REFRESH_EXPIRES_IN });
+        console.log(user);
+        return jwt.sign({ id: user.idUser }, JWT_SECRET, { expiresIn: REFRESH_EXPIRES_IN });
     }
     static async generateHashPassword(password){
-        return hashed = await bcrypt.hash(password, 10);
+        const hashed = await bcrypt.hash(password, 10);
+        return hashed;
     }
 }
 /**
@@ -37,7 +39,7 @@ class AccountService {
     constructor() { }
 
     // Registro de usuario
-    async register(req, res) {
+    async register(req) {
         try {
             const { username, name, email, password, role } = req.body;
             if (!email || !password) return { status: 400, message: 'Email y contraseña requeridos' };
@@ -47,8 +49,10 @@ class AccountService {
 
             //hashed password
             const hashed = await TokenService.generateHashPassword(password);
-            const user = new User({ username, name, email: email.toLowerCase(), passwordHash: hashed, role });
-            await user.save();
+            console.log(hashed);
+            const user = await User.create({ username, name, email: email.toLowerCase(), passwordHash: hashed, role });
+            //const user = new User();
+            //await user.save();
 
             const accessToken = TokenService.generateAccessToken(user);
             //const refreshToken = TokenService.generateRefreshToken(user);
@@ -58,13 +62,13 @@ class AccountService {
 
             return  {
                 status: 201,
-                user: { id: user._id, name: user.name, email: user.email },
+                user: { id: user.idUser, name: user.name, email: user.email },
                 accessToken,
                 //refreshToken
             };
         } catch (err) {
             console.error(err);
-            res.status(500).json({ message: 'Error interno', error: err.message });
+            return { status: 500, message: 'Error interno', error: err.message };
         }
     }
     

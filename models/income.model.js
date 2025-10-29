@@ -39,4 +39,5 @@ Income.init({
     sequelize,
     modelName: "Income"
 });
+
 export default Income;
