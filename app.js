@@ -7,7 +7,7 @@ import logger from 'morgan';
 
 import indexRouter from'./routes/index.routes.js';
 import usersRouter from './routes/users.routes.js';
-
+import { requestUser } from './utils/lib/helpers.js';
 var app = express();
 
 const __dirname = import.meta.dirname;
@@ -33,6 +33,7 @@ app.use(lessMiddleware(path.join(__dirname, 'public'),
   }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(requestUser());
 
 //rutas
 app.use('/', indexRouter);

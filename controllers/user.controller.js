@@ -50,16 +50,38 @@ class UserController {
     // Actualizar un usuario
     async updateUser(req, res) {
         try {
-            const { username, name, email, password, role, id } = req.body;
+            const userId = req.user && req.user.id;
+            console.log('Authenticated user ID:', req.user);
+            if (!userId) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+
+            const { username, name, email, role, id } = req.body;
+            const user = await User.findOne({ where: { idUSer: id}});
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            await user.update({ username, name, email, role});
+            res.json(user);
+        } catch (error) {
+            console.error('Error updating user:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
+    // Actualizar contraseña de usuario
+    async updatePassword(req, res) {
+        try {
+            const { password, id } = req.body;
             const passwordHash = password;
             const user = await User.findOne({ where: { idUSer: id}});
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            await user.update({ username, name, email, passwordHash, role});
-            res.json(user);
+            await user.update({ passwordHash });
+            res.json({ message: 'Password updated successfully' });
         } catch (error) {
-            console.error('Error updating user:', error);
+            console.error('Error updating password:', error);
             res.status(500).json({ error: 'Internal server error' });
         }
     }
