@@ -9,10 +9,12 @@ class CategoryController {
     async createCategory(req, res) {
         try {
             const { name, description } = req.body;
+            console.log(req.body);
+            console.log('name:', name.trim());
             if (!name || !name.trim()) return res.status(400).json({ message: 'Name is required' });
 
-            const existing = await CategoryModel.findOne({ name: name.trim() });
-            if (existing) return res.status(409).json({ message: 'Category already exists' });
+            const existing = await CategoryModel.findOne({ where: { name: name.trim() } });
+            if (existing) return res.status(409).json({ message: 'Category already exists', existing: existing.name });
 
             const category = new CategoryModel({ name: name.trim(), description });
             await category.save();
