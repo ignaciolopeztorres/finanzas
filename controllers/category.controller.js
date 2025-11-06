@@ -62,7 +62,7 @@ class CategoryController {
     async getCategoryById(req, res) {
         try {
             const { id } = req.params;
-            const category = await CategoryModel.findById(id);
+            const category = await CategoryModel.findOne({ where: { idCategory: id } });
             if (!category) return res.status(404).json({ message: 'Category not found' });
             return res.json(category);
         } catch (err) {
@@ -75,17 +75,20 @@ class CategoryController {
         try {
             const { id } = req.params;
             const update = {};
+
+            // Only update fields that are provided
             if (req.body.name) update.name = req.body.name.trim();
             if (req.body.description !== undefined) update.description = req.body.description;
+            
+            // Check if category exists
+            const dup = await CategoryModel.findOne({ where: { idCategory: id } });
+            if (!dup) return res.status(404).json({ message: 'Category not found' });
 
-            if (update.name) {
-                const dup = await CategoryModel.findOne({ name: update.name, _id: { $ne: id } });
-                if (dup) return res.status(409).json({ message: 'Another category with that name exists' });
-            }
+            // Update the category
+            const updateCategory = await CategoryModel.update(update, { where: { idCategory: id } });
+            //const updatedCategory = await CategoryModel.findOne({ where: { idCategory: id } });
+            return res.json({ name: 'Updated Category', updateCategory });
 
-            const updated = await CategoryModel.findByIdAndUpdate(id, update, { new: true, runValidators: true });
-            if (!updated) return res.status(404).json({ message: 'Category not found' });
-            return res.json(updated);
         } catch (err) {
             return res.status(500).json({ message: 'Server error', error: err.message });
         }
