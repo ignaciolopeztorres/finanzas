@@ -8,6 +8,7 @@ import logger from 'morgan';
 import indexRouter from'./routes/index.routes.js';
 import usersRouter from './routes/users.routes.js';
 import categoryRoutes from './routes/category.routes.js';
+import incomeRoutes from './routes/income.routes.js';
 
 import { requestUser } from './utils/lib/helpers.js';
 var app = express();
@@ -41,6 +42,7 @@ app.use(requestUser());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/categories', categoryRoutes);
+app.use('/incomes', incomeRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
