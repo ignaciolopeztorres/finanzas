@@ -98,9 +98,12 @@ class CategoryController {
     async deleteCategory(req, res) {
         try {
             const { id } = req.params;
-            const deleted = await CategoryModel.findByIdAndDelete(id);
+            // Check if category exists
+            const deleted = await CategoryModel.findOne({ where: { idCategory: id } });
             if (!deleted) return res.status(404).json({ message: 'Category not found' });
-            return res.json({ message: 'Category deleted' });
+            // Delete the category
+            const del = await CategoryModel.destroy({ where: { idCategory: id } });
+            return res.json({ message: 'Category deleted', deleted: deleted });
         } catch (err) {
             return res.status(500).json({ message: 'Server error', error: err.message });
         }
