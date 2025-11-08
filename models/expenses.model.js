@@ -12,6 +12,11 @@ import sequelize from '../core/config/sequelize.config.js';
 class Expense extends Model {}
 
 Expense.init({
+    idExpense: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+    },
     description: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -34,4 +39,4 @@ Expense.init({
     timestamps: true,
 });
 
-export default new Expense();
+export default Expense;
