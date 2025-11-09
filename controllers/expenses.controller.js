@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 import expensesModel from '../models/expenses.model.js';
+import Expense from '../models/expenses.model.js';
 
 const { Op, fn, col, literal } = Sequelize;
 // If the Expense model is a Sequelize model, override/attach Sequelize-based handlers
@@ -27,29 +28,23 @@ class ExpenseController {
         }
     }
 
-    // Additional Sequelize-based methods can be added here
-    async createExpense(req, res) {
-        try {
-            const newExpense = await expenseModel.create(req.body);
-            res.status(201).json(newExpense);
-        } catch (error) {
-            res.status(500).json({ error: 'Failed to create expense' });
-        }
-    }
-
     // Other CRUD operations can be implemented similarly
     async createExpense(req, res, next) {
         try {
-            const errMsg = validateExpensePayload(req.body);
-            if (errMsg) return res.status(400).json({ error: errMsg });
+            //const errMsg = validateExpensePayload(req.body);
+            //if (errMsg) return res.status(400).json({ error: errMsg });
 
-            const { description, amount, date, category, notes } = req.body;
-            const created = await Expense.create({
+            const { title, description, amount, methodPayment, date, categoryId, notes, isRecurring, recurrenceInterval }  = req.body;
+            const created = await expensesModel.create({
+                title,
                 description,
                 amount,
+                methodPayment,
                 date: new Date(date),
-                category: category || 'uncategorized',
-                notes: notes || ''
+                categoryId: categoryId || 'uncategorized',
+                notes: notes || '',
+                isRecurring,
+                recurrenceInterval
             });
 
             return res.status(201).json(created.get ? created.get({ plain: true }) : created);
