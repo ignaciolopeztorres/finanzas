@@ -110,9 +110,10 @@ class ExpenseController {
     // Get a single expense by ID
     async getExpenseById(req, res, next) {
         try {
-            const { id } = req.params;
-            const expense = await Expense.findByPk(id, { raw: true });
-            if (!expense) return res.status(404).json({ error: 'Expense not found' });
+            const { idExpense } = req.params;
+            console.log('Fetching expense with id:', idExpense);
+            const expense = await Expense.findOne({ where: { idExpense: idExpense }, raw: true });
+            if (!expense) return res.status(404).json({ message: 'Expense not found ', idExpense, error: 'NotFound' });
             return res.json(expense);
         } catch (err) {
             return next(err);
@@ -121,16 +122,16 @@ class ExpenseController {
     // Update an existing expense by ID
     async updateExpense(req, res, next) {
         try {
-            const { id } = req.params;
+            const { idExpense } = req.params;
             const updatable = {};
-            ['description', 'amount', 'date', 'category', 'notes'].forEach(k => {
+            ['title', 'description', 'amount', 'date', 'categoryId', 'notes'].forEach(k => {
                 if (req.body[k] !== undefined) updatable[k] = req.body[k];
             });
             if (updatable.date) updatable.date = new Date(updatable.date);
 
             // Attempt returning; fallback to fetching after update if not supported
             let updated = null;
-            const result = await Expense.update(updatable, { where: { id }, returning: true });
+            const result = await Expense.update(updatable, { where: { idExpense }, returning: true });
             if (Array.isArray(result) && result[0] === 0) {
                 return res.status(404).json({ error: 'Expense not found' });
             }
@@ -138,7 +139,7 @@ class ExpenseController {
                 updated = result[1][0].toJSON ? result[1][0].toJSON() : result[1][0];
             } else {
                 // fallback
-                updated = await Expense.findByPk(id, { raw: true });
+                updated = await Expense.findOne({ where: { idExpense }, raw: true });
             }
 
             return res.json(updated);
@@ -150,8 +151,8 @@ class ExpenseController {
     // Delete an expense by ID
     async deleteExpense(req, res, next) {
         try {
-            const { id } = req.params;
-            const destroyed = await Expense.destroy({ where: { id } });
+            const { idExpense } = req.params;
+            const destroyed = await Expense.destroy({ where: { idExpense } });
             if (!destroyed) return res.status(404).json({ error: 'Expense not found' });
             return res.status(204).send();
         } catch (err) {
@@ -159,7 +160,40 @@ class ExpenseController {
         }
     };
     // Get summary of expenses grouped by category
-    async summary(req, res, next) {
+    async getExpenseSummary(req, res, next) {
+        try {
+            console.log('getExpenseSummary called');
+            const { from, to } = req.query;
+            console.log('getExpenseSummary called with from:', from, 'to:', to);
+            const where = {};
+            if (from || to) {
+                where.date = {};
+                if (from) where.date[Op.gte] = new Date(from);
+                if (to) where.date[Op.lte] = new Date(to);
+            }
+
+            const grouped = await Expense.findAll({
+                attributes: [
+                    ['categoryId', 'categoryId'],
+                    [fn('SUM', col('amount')), 'total'],
+                    [fn('COUNT', col('idExpense')), 'count']
+                ],
+                where,
+                group: ['categoryId'],
+                order: [[literal('total'), 'DESC']],
+                raw: true
+            });
+
+            const grand = grouped.reduce((acc, g) => acc + Number(g.total || 0), 0);
+
+            return res.json({ total: grand, byCategory: grouped });
+        } catch (err) {
+            console.error(err);
+            return next(err);
+        }
+    };
+    // Get expense summary by category
+    async getExpenseSummaryByCategory(req, res, next) {
         try {
             const { from, to } = req.query;
             const where = {};
@@ -171,12 +205,12 @@ class ExpenseController {
 
             const grouped = await Expense.findAll({
                 attributes: [
-                    ['category', 'category'],
+                    ['categoryId', 'categoryId'],
                     [fn('SUM', col('amount')), 'total'],
-                    [fn('COUNT', col('id')), 'count']
+                    [fn('COUNT', col('idExpense')), 'count']
                 ],
                 where,
-                group: ['category'],
+                group: ['categoryId'],
                 order: [[literal('total'), 'DESC']],
                 raw: true
             });
@@ -188,7 +222,85 @@ class ExpenseController {
             return next(err);
         }
     };
+    // Get daily expense summary
+    async getDailyExpenseSummary(req, res, next) {
+        try {
+            const { from, to } = req.query;
+            const where = {};
+            if (from || to) {
+                where.date = {};
+                if (from) where.date[Op.gte] = new Date(from);
+                if (to) where.date[Op.lte] = new Date(to);
+                console.log('Filtering daily summary from', from, 'to', to);
+            }
+            const daily = await Expense.findAll({
+                attributes: [
+                    [fn('DATE_FORMAT', col('date'), '%Y-%m-%d'), 'day'],
+                    [fn('SUM', col('amount')), 'total']
+                ],
+                where,
+                group: [fn('DATE_FORMAT', col('date'), '%Y-%m-%d')],
+                order: [[literal('day'), 'ASC']],
+                raw: true
+            });
+            console.log('Daily expense summary:', daily);
+            return res.json(daily);
+        } catch (err) {
+            return next(err);
+        }
+    };
+    // Get monthly expense summary
+    async getMonthlyExpenseSummary(req, res, next) {
+        try {
+            const { year } = req.query;
+            const where = {};
+            if (year) {
+                const start = new Date(`${year}-01-01`);
+                const end = new Date(`${year}-12-31`);
+                where.date = { [Op.between]: [start, end] };
+            }
+            const monthly = await Expense.findAll({
+                attributes: [
+                    [fn('DATE_FORMAT', col('date'), '%Y-%m'), 'month'],
+                    [fn('SUM', col('amount')), 'total']
+                ],
+                where,
+                group: [fn('DATE_FORMAT', col('date'), '%Y-%m')],
+                order: [[literal('month'), 'ASC']],
+                raw: true
+            });
 
+            return res.json(monthly);
+        } catch (err) {
+            return next(err);
+        }
+    };
+    // Get annual expense summary
+    async getAnnualExpenseSummary(req, res, next) {
+        try {
+            const { from, to } = req.query;
+            const where = {};
+            if (from || to) {
+                where.date = {};
+                if (from) where.date[Op.gte] = new Date(from);
+                if (to) where.date[Op.lte] = new Date(to);
+            }
+            const annual = await Expense.findAll({
+                attributes: [
+                    [fn('DATE_FORMAT', col('date'), '%Y'), 'year'],
+                    [fn('SUM', col('amount')), 'total']
+                ],
+                where,
+                group: [fn('DATE_FORMAT', col('date'), '%Y')],
+                order: [[literal('year'), 'ASC']],
+                raw: true
+            });
+
+            return res.json(annual);
+        } catch (err) {
+            return next(err);
+        }
+    };
 }
 
 export default new ExpenseController();
