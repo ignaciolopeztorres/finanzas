@@ -30,17 +30,8 @@ Service.init({
     }
 }, {
     sequelize,
-    modelName: "Service"
+    modelName: "Service",
+    timestamps: true
 });
-
-Service.hasOne(Payment, {
-    sourceKey: "idService",
-    foreignKey: "ServiceId"
-})
-
-Payment.belongsTo(Service, {
-    sourceKey: "idService",
-    foreignKey: "ServiceId"
-})
 
 export default Service;

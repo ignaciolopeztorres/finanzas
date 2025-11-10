@@ -8,8 +8,9 @@
  */
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../core/config/sequelize.config.js";
+import Category from "./Category.models.js";
 
-class Income extends Model{}
+class Income extends Model { }
 
 Income.init({
     idIncome: {
@@ -39,5 +40,8 @@ Income.init({
     sequelize,
     modelName: "Income"
 });
+
+Category.hasMany(Income, { foreignKey: 'categoryId', sourceKey: 'idCategory', as: 'incomes' });
+Income.belongsTo(Category, { foreignKey: 'categoryId', targetKey: 'idCategory', as: 'category' });
 
 export default Income;

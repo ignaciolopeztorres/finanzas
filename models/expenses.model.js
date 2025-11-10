@@ -37,7 +37,6 @@ Expense.init({
     //},
     methodPayment: {
         type: DataTypes.STRING,
-        enum: ['cash', 'credit_card', 'debit_card', 'bank_transfer', 'other'],
         allowNull: false,
         defaultValue: "cash"
     },

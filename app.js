@@ -12,7 +12,7 @@ import incomeRoutes from './routes/income.routes.js';
 import expensesRoutes from './routes/expenses.routes.js';
 import produdctRoutes from './routes/products.routes.js';
 import servicesRoutes from './routes/services.routes.js';
-
+import paymentRoutes from './routes/payments.routes.js';
 
 import { requestUser } from './utils/lib/helpers.js';
 var app = express();
@@ -50,6 +50,7 @@ app.use('/incomes', incomeRoutes);
 app.use('/expenses', expensesRoutes);
 app.use('/products', produdctRoutes);
 app.use('/services', servicesRoutes);
+app.use('/payments', paymentRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

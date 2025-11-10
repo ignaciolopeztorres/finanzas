@@ -8,6 +8,7 @@ import app from '../app.js';
 import debug from 'debug';
 import http from 'http';
 import sequelize from '../core/config/sequelize.config.js';
+debug('your-project-name:server');
 
 /**
  * Get port from environment and store in Express.

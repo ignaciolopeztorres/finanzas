@@ -25,27 +25,14 @@ Product.init({
         type: DataTypes.STRING,
         allowNull: true
     },
-    price: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
-    },
     quantity: {
         type: DataTypes.INTEGER,
         defaultValue: 0
     }
 }, {
     sequelize,
-    modelName: "Product"
+    modelName: "Product",
+    timestamps: true
 });
-
-Payment.hasOne(Product, {
-    sourceKey: "idProduct",
-    foreignKey: "productId"
-})
-
-Product.belongsTo(Payment,{
-    sourceKey:"IdProducto",
-    foreignKey: "productId"
-})
 
 export default Product;

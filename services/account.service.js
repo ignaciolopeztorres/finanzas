@@ -22,7 +22,7 @@ class TokenService {
         console.log(user);
         return jwt.sign({ id: user.idUser }, JWT_SECRET, { expiresIn: REFRESH_EXPIRES_IN });
     }
-    static async generateHashPassword(password){
+    static async generateHashPassword(password) {
         const hashed = await bcrypt.hash(password, 10);
         return hashed;
     }
@@ -60,7 +60,7 @@ class AccountService {
             // Opcional: guardar refreshToken en DB si se quiere invalidar después
             // user.refreshToken = refreshToken; await user.save();
 
-            return  {
+            return {
                 status: 201,
                 user: { id: user.idUser, name: user.name, email: user.email },
                 accessToken,
@@ -71,12 +71,12 @@ class AccountService {
             return { status: 500, message: 'Error interno', error: err.message };
         }
     }
-    
+
     // Login
     async login(req, res) {
         try {
             const { email, password } = req.body;
-            if (!email || !password) return {status: 400, message: 'Email y contraseña requeridos' };
+            if (!email || !password) return { status: 400, message: 'Email y contraseña requeridos' };
 
             // Buscar usuario
             const user = await User.findOne({ where: { email: email.toLowerCase() } });
@@ -85,7 +85,7 @@ class AccountService {
             // Verificar contraseña
 
             const match = await bcrypt.compare(password, user.passwordHash);
-            if (!match) return {status:401, message: 'Credenciales inválidas ___P' };
+            if (!match) return { status: 401, message: 'Credenciales inválidas ___P' };
 
             const accessToken = TokenService.generateAccessToken(user);
             //const refreshToken = TokenService.generateRefreshToken(user);
@@ -114,10 +114,12 @@ class AccountService {
     // Si no existe middleware, intenta verificar token Authorization Bearer
     async getProfile(req, res) {
         try {
+            // Assumes an auth middleware has set req.userId
             let userId = req.user && req.user.id;
             if (!userId) {
                 const auth = req.headers.authorization;
                 if (!auth) return res.status(401).json({ message: 'No autorizado' });
+                
                 const token = auth.split(' ')[1];
                 const payload = jwt.verify(token, JWT_SECRET);
                 userId = payload.id;
@@ -166,14 +168,21 @@ class AccountService {
     // Logout (limpia cookie si se usa)
     async logout(req, res) {
         try {
-            // Si se utiliza cookie:
-            // res.clearCookie('refreshToken');
-            res.json({ message: 'Sesión cerrada' });
+            const token = req.cookies?.refreshToken || req.body.refreshToken;
+            if (token) {
+                // Try to find user and clear stored refresh token
+                try {
+                    const payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+                    await User.findByIdAndUpdate(payload.id, { $unset: { refreshToken: 1 } });
+                } catch (_) { /* ignore invalid token */ }
+            }
+
+            res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
+            return res.json({ message: 'Logged out' });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Error interno' });
+            return res.status(500).json({ message: 'Server error', error: err.message });
         }
     }
-}; 
+}
 export default new AccountService();
 export { TokenService };
