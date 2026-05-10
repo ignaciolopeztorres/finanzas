@@ -32,9 +32,9 @@ class IncomeController {
     // Example: Add new income entry
     async addIncome(req, res) {
         try {
-            const { source, amount, date, notes } = req.body;
+            const { source, amount, date, notes, CategoryId } = req.body;
             const newIncome = await Income.create({ 
-                source, amount, date, notes 
+                source, amount, date, notes, CategoryId
             });
         
             res.status(201).json({ success: true, data: newIncome });

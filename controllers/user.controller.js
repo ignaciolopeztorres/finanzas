@@ -1,13 +1,15 @@
-import User from "../models/user.model.js";
+import UsersRepository from "../repositories/Users.repository.js";
 import accountService, { TokenService } from "../services/account.service.js";
 
 class UserController {
     constructor() { }
 
-    // Obtener todos los usuarios
+    /** Obtener todos los usuarios
+     * @route GET /users
+     */
     async getAllUsers(req, res) {
         try {
-            const users = await User.findAll();
+            const users = await UsersRepository.findAllUsers();
             if (!users || users.length === 0) {
                 return res.status(404).json({ message: 'No users found' });
             }
@@ -21,7 +23,7 @@ class UserController {
     async getUserById(req, res) {
         try {
             const { id } = req.params;
-            const user = await User.findByPk(id);
+            const user = await UsersRepository.findUserById(id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -50,19 +52,15 @@ class UserController {
     // Actualizar un usuario
     async updateUser(req, res) {
         try {
-            const userId = req.user && req.user.id;
-            console.log('Authenticated user ID:', req.user);
-            if (!userId) {
-                return res.status(401).json({ error: 'Unauthorized' });
-            }
-
-            const { username, name, email, role, id } = req.body;
-            const user = await User.findOne({ where: { idUSer: id}});
+            const idUser = req.params.id;
+            const { username, name, email, role } = req.body;
+            const user = await UsersRepository.findUserById(idUser);
+            console.log('User to update:', user);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            await user.update({ username, name, email, role});
-            res.json(user);
+            const updateUSer = await UsersRepository.updateUser(idUser, { username, name, email, role});
+            res.json(updateUSer);
         } catch (error) {
             console.error('Error updating user:', error);
             res.status(500).json({ error: 'Internal server error' });
@@ -74,7 +72,7 @@ class UserController {
         try {
             const { password, id } = req.body;
             const passwordHash = password;
-            const user = await User.findOne({ where: { idUSer: id}});
+            const user = await UsersRepository.findUserById(id);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
@@ -88,7 +86,7 @@ class UserController {
     // Eliminar un usuario
     async deleteUser(req, res) {
         try {
-            const user = await User.findByPk(req.params.id);
+            const user = await UsersRepository.findUserById(req.params.id);
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }

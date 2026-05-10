@@ -66,7 +66,7 @@ Payment.sync({ force: true }).then(() => {
 //    foreignKey: "serviceId",
 //    targetKey: "idService"
 //});
-
+/*
 Payment.hasMany(Product, {    
     foreignKey: "paymentId",
     sourceKey: "idPayment"    
@@ -76,5 +76,6 @@ Product.belongsTo(Payment, {
     foreignKey: "paymentId",
     targetKey: "idPayment"
 });
+*/
 
 export default Payment;

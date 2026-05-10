@@ -34,6 +34,16 @@ Income.init({
     notes: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    CategoryId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        references: {
+            model: Category,
+            key: 'idCategory'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
     }
 }, {
     timestamps: true,
@@ -41,7 +51,7 @@ Income.init({
     modelName: "Income"
 });
 
-Category.hasMany(Income, { foreignKey: 'categoryId', sourceKey: 'idCategory', as: 'incomes' });
-Income.belongsTo(Category, { foreignKey: 'categoryId', targetKey: 'idCategory', as: 'category' });
+Category.hasMany(Income, { foreignKey: 'CategoryId', sourceKey: 'idCategory', as: 'incomes' });
+Income.belongsTo(Category, { foreignKey: 'CategoryId', targetKey: 'idCategory', as: 'category' });
 
 export default Income;
