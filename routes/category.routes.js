@@ -1,5 +1,4 @@
 import express from 'express';
-import { body, param, validationResult } from 'express-validator';
 
 const router = express.Router();
 
