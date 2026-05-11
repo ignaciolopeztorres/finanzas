@@ -1,4 +1,3 @@
-import { Category } from './category.model.js';
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../core/config/sequelize.config.js";
 
@@ -38,7 +37,7 @@ CuentaUsuario.init({
 }, {
     tableName: 'cuentas',
     timestamps: true,
-    underscored: true,
+    sequelize,
 });
 
 export default CuentaUsuario;
