@@ -1,4 +1,5 @@
 import IncomeRepository from "../repositories/Income.repository.js";
+import transaccionService from "../services/transaction.service.js";
 
 class IncomeController {
     constructor() {  }
@@ -29,15 +30,38 @@ class IncomeController {
         }
     }
 
-    // Example: Add new income entry
+    /**
+     * Example: Add new income entry
+     * @route POST /incomes
+     * @body { source, amount, date, notes, CategoryId }
+     */
     async addIncome(req, res) {
         try {
             const { source, amount, date, notes, CategoryId } = req.body;
+
+            //validate date
+            console.log('Received date:', date);
+            if (isNaN(Date.parse(date))) {
+                return res.status(400).json({ success: false, error: 'Invalid date format' });
+            }
             const newIncome = await IncomeRepository.createIncome({ 
                 source, amount, date, notes, CategoryId
             });
-        
-            res.status(201).json({ success: true, data: newIncome });
+
+            // Check if the income was created successfully            
+            if (!newIncome) {
+                return res.status(400).json({ success: false, error: 'Failed to create income' });
+            }
+
+            const transaction = await transaccionService.createTransaction({
+                type: 'income',
+                amount,
+                date,
+                description: `Income from ${source}`,
+                CategoryId
+            });
+
+            res.status(201).json({ success: true, data: newIncome, transaction: transaction });
         } catch (error) {
             res.status(500).json({ success: false, error: error.message });
         }   

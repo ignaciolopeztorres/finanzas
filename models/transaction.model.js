@@ -1,20 +1,20 @@
-// models/Transaccion.js
+// models/Transaction.js
 /**
  * Modelo de transacciones
  */
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../core/config/sequelize.config.js';
 
-class Transaccion extends Model { }
+class Transaction extends Model { }
 
-Transaccion.init({
-    idTransaccion: {
+Transaction.init({
+    idTransaction: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
     },
     type: {
-        type: DataTypes.ENUM('ingreso', 'egreso'),
+        type: DataTypes.ENUM('Income', 'Expense'),
         allowNull: false,
     },
     amount: {
@@ -32,8 +32,8 @@ Transaccion.init({
     },
 }, {
     sequelize,
-    tableName: 'transaccion',
+    tableName: 'transactions',
     timestamps: true, // createdAt, updatedAt
 });
 
-export default new Transaccion();
+export default Transaction;
