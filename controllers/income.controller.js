@@ -1,11 +1,11 @@
-import Income from "../models/income.model.js";
+import IncomeRepository from "../repositories/Income.repository.js";
 
 class IncomeController {
     constructor() {  }
 
     async getAllIncomes(req, res) {
         try {
-            const incomes = await Income.findAll();
+            const incomes = await IncomeRepository.findAllIncomes();
             if (incomes.length === 0) {
                 return res.status(200).json({ message: 'No incomes found' });
             }
@@ -19,7 +19,7 @@ class IncomeController {
     async getIncomeDetails (req, res) {
         try {
             const { idIncome } = req.params;
-            const incomeDetails = await Income.findByPk(idIncome);
+            const incomeDetails = await IncomeRepository.findIncomeById(idIncome);
             if (!incomeDetails) {
                 return res.status(404).json({ error: 'Income not found' });
             }
@@ -33,7 +33,7 @@ class IncomeController {
     async addIncome(req, res) {
         try {
             const { source, amount, date, notes, CategoryId } = req.body;
-            const newIncome = await Income.create({ 
+            const newIncome = await IncomeRepository.createIncome({ 
                 source, amount, date, notes, CategoryId
             });
         
@@ -47,7 +47,7 @@ class IncomeController {
         try {
             const { idIncome } = req.params;
             const { source, amount, date, notes } = req.body;   
-            const updatedIncome = await Income.findByPk(idIncome);
+            const updatedIncome = await IncomeRepository.findIncomeById(idIncome);
             if (!updatedIncome) {
                 return res.status(404).json({ error: 'Income not found' });
             }
@@ -65,11 +65,11 @@ class IncomeController {
     async deleteIncome(req, res) {
         try {
             const { idIncome } = req.params;
-            const deletedIncome = await Income.findByPk(idIncome);
+            const deletedIncome = await IncomeRepository.findIncomeById(idIncome);
             if (!deletedIncome) {
                 return res.status(404).json({ error: 'Income not found' });
             }
-            await deletedIncome.destroy();
+            await IncomeRepository.deleteIncome(idIncome);
             res.json({ success: true, message: 'Income deleted successfully' });
         } catch (error) {
             res.status(500).json({ error: 'Failed to delete income' });
