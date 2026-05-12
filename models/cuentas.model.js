@@ -1,6 +1,9 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../core/config/sequelize.config.js";
 
+import User from "./user.model.js";
+// Define the CuentaUsuario model
+
 class CuentaUsuario extends Model { }
 
 CuentaUsuario.init({
@@ -12,12 +15,6 @@ CuentaUsuario.init({
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    tipoCuenta: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        enum: ['banco', 'tarjeta de crédito', 'efectivo', 'otro'],
-        defaultValue: 'otro',
     },
     balance: {
         type: DataTypes.DECIMAL(18, 2),
@@ -34,10 +31,18 @@ CuentaUsuario.init({
         allowNull: false,
         defaultValue: 'activo',
     },
+    userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+    },
 }, {
     tableName: 'cuentas',
     timestamps: true,
     sequelize,
 });
+
+//define association with User model
+CuentaUsuario.belongsTo(User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });
+User.hasMany(CuentaUsuario, { foreignKey: 'userId', as: 'cuentas', onDelete: 'CASCADE' });
 
 export default CuentaUsuario;

@@ -10,7 +10,7 @@ class CuentasRepository {
     }
 
     async findById(id) {
-        return await this.Cuenta.findById(id);
+        return await this.Cuenta.findOne({ where: { idCuentaUsuario: id } });
     }
 
     async findAll() {
@@ -18,11 +18,15 @@ class CuentasRepository {
     }
 
     async update(id, data) {
-        return await this.Cuenta.update({ _id: id }, data);
+        return await this.Cuenta.update(data, { where: { idCuentaUsuario: id } });
     }
 
     async delete(id) {
-        return await this.Cuenta.delete({ _id: id });
+        return await this.Cuenta.destroy({ where: { idCuentaUsuario: id } });
+    }
+
+    async findByfield(field, value) {
+        return await this.Cuenta.findOne({ where: { [field]: value } });
     }
 }
 

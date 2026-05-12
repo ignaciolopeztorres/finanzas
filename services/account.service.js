@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js'; // Ajustar según tu modelo
+import cuentaService from '../services/cuentas.service.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
@@ -53,7 +54,12 @@ class AccountService {
             const user = await User.create({ username, name, email: email.toLowerCase(), passwordHash: hashed, role });
             //const user = new User();
             //await user.save();
-
+            if (!user) {
+                return { status: 400, message: 'Error al crear usuario' }
+            } else {
+                //genera cuenta para el usuario
+                const account = await cuentaService.nuevaCuenta({ name: `Cuenta de ${user.name}`, balance: 0, userId: user.idUser });
+            }
             const accessToken = TokenService.generateAccessToken(user);
             //const refreshToken = TokenService.generateRefreshToken(user);
             console.log('access token', accessToken);

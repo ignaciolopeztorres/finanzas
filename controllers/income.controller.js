@@ -37,10 +37,8 @@ class IncomeController {
      */
     async addIncome(req, res) {
         try {
-            const { source, amount, date, notes, CategoryId } = req.body;
+            const { source, amount, date, notes, CategoryId, userId } = req.body;
 
-            //validate date
-            console.log('Received date:', date);
             if (isNaN(Date.parse(date))) {
                 return res.status(400).json({ success: false, error: 'Invalid date format' });
             }
@@ -58,7 +56,8 @@ class IncomeController {
                 amount,
                 date,
                 description: `Income from ${source}`,
-                CategoryId
+                CategoryId,
+                userId: userId// req.user.id // Assuming you have user authentication
             });
 
             res.status(201).json({ success: true, data: newIncome, transaction: transaction });
