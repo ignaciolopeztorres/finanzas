@@ -51,11 +51,11 @@ Payment.init({
 });
 
 /* Crear la tabla en la base de datos si no existe */
-Payment.sync({ force: true }).then(() => {
-    console.log("Tabla Payment creada correctamente");
-}).catch((error) => {
-    console.error("Error al crear la tabla Payment:", error);
-});
+//Payment.sync({ force: true }).then(() => {
+//    console.log("Tabla Payment creada correctamente");
+//}).catch((error) => {
+//    console.error("Error al crear la tabla Payment:", error);
+//});
 
 /* Relaciones con Service y Product */
 //Payment.hasMany(Service, {    

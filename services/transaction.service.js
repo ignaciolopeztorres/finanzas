@@ -19,9 +19,9 @@ class TransactionService {
             const savedTransaction = await transaction.save();
 
             // Optionally, you can perform additional operations here, such as updating user balance, sending notifications, etc.
-            console.log('Updating balance for user:', data.userId);
+            
             const updateResult = await cuentaService.updateBalance(data.userId, data.amount, data.type); // Example of updating balance
-            console.log('Balance update result:', updateResult);
+            
             return savedTransaction;
         } catch (error) {
             console.error('Error creating transaction:', error);
