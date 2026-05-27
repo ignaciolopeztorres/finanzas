@@ -12,7 +12,7 @@ class ViewsController {
         try{
             res.render('admin/dashboard', {title: 'Dashboard'})
         }catch(error){
-            console.error(error);
+            console.error("error: ",error);
             res.render('error', { title: error.title})
         }
     }

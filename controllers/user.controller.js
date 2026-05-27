@@ -1,5 +1,5 @@
 import UsersRepository from "../repositories/Users.repository.js";
-import accountService, { TokenService } from "../services/account.service.js";
+import accountService from "../services/account.service.js";
 
 class UserController {
     constructor() { }

@@ -3,6 +3,7 @@ import User from '../models/user.model.js';
 class UserRepository {
   constructor() {
     this.User = User;
+    this.refreshTokens = [];
   }
 
   async findAllUsers() {
@@ -32,6 +33,15 @@ class UserRepository {
     if (!user) return null;
     await user.destroy();
     return user;
+  }
+  saveRefreshToken(token){
+    this.refreshTokens.push(token);
+  }
+  findRefreshToken(token){
+    this.refreshTokens.includes(token);
+  }
+  deleteRefreskToken(token){
+    this.refreshTokens = this.refreshTokens.filter( t => t !== token);
   }
 }
 
