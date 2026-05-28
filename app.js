@@ -6,8 +6,15 @@ import lessMiddleware  from 'less-middleware';
 import logger from 'morgan';
 
 import indexRouter from'./routes/index.routes.js';
-//var usersRouter = require('./routes/users');
+import usersRouter from './routes/users.routes.js';
+import categoryRoutes from './routes/category.routes.js';
+import incomeRoutes from './routes/income.routes.js';
+import expensesRoutes from './routes/expenses.routes.js';
+import produdctRoutes from './routes/products.routes.js';
+import servicesRoutes from './routes/services.routes.js';
+import paymentRoutes from './routes/payments.routes.js';
 
+import { requestUser } from './utils/lib/helpers.js';
 var app = express();
 
 const __dirname = import.meta.dirname;
@@ -33,14 +40,23 @@ app.use(lessMiddleware(path.join(__dirname, 'public'),
   }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(requestUser());
 
+//rutas
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
+app.use('/users', usersRouter);
+app.use('/categories', categoryRoutes);
+app.use('/incomes', incomeRoutes);
+app.use('/expenses', expensesRoutes);
+app.use('/products', produdctRoutes);
+app.use('/services', servicesRoutes);
+app.use('/payments', paymentRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function (err, req, res, next) {
