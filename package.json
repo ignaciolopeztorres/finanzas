@@ -1,8 +1,8 @@
 {
   "name": "finanzas",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "Finanzas",
+  "description": "gestion de finanzas personales",
   "keywords": [
     "finanzas",
     "presupuestos"
@@ -16,7 +16,7 @@
     "url": "git+https://github.com/ignaciolopeztorres/finanzas.git"
   },
   "license": "ISC",
-  "author": "Ignacio Lopez",
+  "author": "ignacio lopez Torres <masterdeveloper949@gmail.com> (http://ignaciolopeztorres.blogspot.com/)",
   "type": "module",
   "main": "bin/www",
   "directories": {
