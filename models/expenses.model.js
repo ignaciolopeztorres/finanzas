@@ -6,9 +6,12 @@
  * - date: fecha del gasto
  * - notes: notas adicionales
  */
-import { DataTypes, Model} from 'sequelize';
+import {
+    DataTypes,
+    Model
+} from 'sequelize';
 import sequelize from '../core/config/sequelize.config.js';
-import Category from './Category.models.js';
+import Category from './Category.model.js';
 
 class Expense extends Model {}
 

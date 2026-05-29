@@ -8,10 +8,15 @@ var router = express.Router();
 //    res.status(200).send('adasd');
 //});
 /* GET home page. */
-router.get('/', ViewsController.renderHome );
+router.get('/', ViewsController.renderHome);
 
 /** GET Dashboard */
 router.get('/dashboard', ViewsController.dashboard);
+
+/** GET Categories */
+router.get('/categories', ViewsController.categories);
+/** GET Operations */
+router.get('/operations', ViewsController.operations);
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);

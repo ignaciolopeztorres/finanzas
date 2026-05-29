@@ -6,11 +6,14 @@
  * - recivedAt: fecha de recibo
  * - notes: notas adicionales
  */
-import { DataTypes, Model } from "sequelize";
+import {
+    DataTypes,
+    Model
+} from "sequelize";
 import sequelize from "../core/config/sequelize.config.js";
-import Category from "./Category.models.js";
+import Category from "./Category.model.js";
 
-class Income extends Model { }
+class Income extends Model {}
 
 Income.init({
     idIncome: {
@@ -51,7 +54,15 @@ Income.init({
     modelName: "Income"
 });
 
-Category.hasMany(Income, { foreignKey: 'CategoryId', sourceKey: 'idCategory', as: 'incomes' });
-Income.belongsTo(Category, { foreignKey: 'CategoryId', targetKey: 'idCategory', as: 'category' });
+Category.hasMany(Income, {
+    foreignKey: 'CategoryId',
+    sourceKey: 'idCategory',
+    as: 'incomes'
+});
+Income.belongsTo(Category, {
+    foreignKey: 'CategoryId',
+    targetKey: 'idCategory',
+    as: 'category'
+});
 
 export default Income;

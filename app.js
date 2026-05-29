@@ -1,11 +1,11 @@
-import createError from'http-errors';
+import createError from 'http-errors';
 import express from 'express';
-import path from'path';
+import path from 'path';
 import cookieParser from 'cookie-parser';
-import lessMiddleware  from 'less-middleware';
+import lessMiddleware from 'less-middleware';
 import logger from 'morgan';
 
-import indexRouter from'./routes/index.routes.js';
+import indexRouter from './routes/index.routes.js';
 import usersRouter from './routes/users.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import incomeRoutes from './routes/income.routes.js';
@@ -14,10 +14,13 @@ import produdctRoutes from './routes/products.routes.js';
 import servicesRoutes from './routes/services.routes.js';
 import paymentRoutes from './routes/payments.routes.js';
 
-import { requestUser } from './utils/lib/helpers.js';
+import {
+  requestUser
+} from './utils/lib/helpers.js';
 var app = express();
 
-const __dirname = import.meta.dirname;
+const __dirname =
+  import.meta.dirname;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,12 +33,11 @@ app.use(express.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
-app.use(lessMiddleware(path.join(__dirname, 'public'), 
-{ 
+app.use(lessMiddleware(path.join(__dirname, 'public'), {
   debug: true,
   force: true,
   dest: './public',
-  render: { 
+  render: {
     compress: false
   }
 }));
@@ -44,13 +46,13 @@ app.use(requestUser());
 
 //rutas
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/categories', categoryRoutes);
-app.use('/incomes', incomeRoutes);
-app.use('/expenses', expensesRoutes);
-app.use('/products', produdctRoutes);
-app.use('/services', servicesRoutes);
-app.use('/payments', paymentRoutes);
+app.use('/api/users', usersRouter);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/incomes', incomeRoutes);
+app.use('/api/expenses', expensesRoutes);
+app.use('/api/products', produdctRoutes);
+app.use('/api/services', servicesRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

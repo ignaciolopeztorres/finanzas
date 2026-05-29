@@ -4,10 +4,13 @@
  * - name: nombre de la categoria
  * - description: descripción de la categoria
  */
-import { DataTypes, Model } from "sequelize";
+import {
+    DataTypes,
+    Model
+} from "sequelize";
 import sequelize from "../core/config/sequelize.config.js";
 
-class Category extends Model{}
+class Category extends Model {}
 
 Category.init({
     idCategory: {
@@ -15,7 +18,7 @@ Category.init({
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    name:{
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'New Category'
@@ -25,7 +28,7 @@ Category.init({
         allowNull: true,
         defaultValue: 'new category description'
     }
-},{
+}, {
     sequelize,
     modelName: 'category'
 })
