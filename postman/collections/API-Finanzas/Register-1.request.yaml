@@ -1,0 +1,18 @@
+$kind: http-request
+name: Register
+url: http://localhost:3001/register
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\":\"ignmacio lopez\",\r
+
+    \    \"username\":\"emai\",\r
+
+    \    \"email\": \"admin2@admin.com\",\r
+
+    \    \"password\": \"12345\"\r
+
+    }"
+order: 2357706887339282

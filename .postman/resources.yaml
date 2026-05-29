@@ -1,0 +1,11 @@
+# Use this workspace to collaborate
+workspace:
+  id: 7799f4c8-7da0-4640-bf6d-6f12beef632c
+
+localResources:
+  docs:
+    - ..\README.md
+    - ..\license.md
+    - ..\finanzas.wiki\_Sidebar.md
+    - ..\finanzas.wiki\_Footer.md
+    - ..\finanzas.wiki\Home.md
